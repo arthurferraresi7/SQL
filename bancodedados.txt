@@ -1,0 +1,100 @@
+/* Atividade 1: Listar Veterinários com Especialidade Específica */
+SELECT * FROM VETERINARIO
+WHERE ESPECIALIDADE = 'Dermatologista';
+
+/* Atividade 2: Buscar Pacientes por Faixa Etária */
+SELECT * FROM PACIENTE
+WHERE idade BETWEEN 2 AND 5;
+
+/* Atividade 3: Listar Agendamentos em um Período Específico */
+SELECT * FROM AGENDAMENTO
+WHERE data_hora BETWEEN '2024-01-01' AND '2024-03-31';
+
+/* Atividade 4: Buscar Medicamentos com Preço Superior a Um Valor */
+SELECT * FROM MEDICAMENTOS
+WHERE preco > 25;
+
+/* Atividade 5: Filtrar Receitas por Data e Veterinário */
+SELECT * FROM RECEITA 
+WHERE data_emissao > '2024-06-01' 
+  AND ID_AGENDAMENTO = (
+      SELECT id_agendamento 
+      FROM AGENDAMENTO 
+      WHERE ID_VETERINARIO = (
+          SELECT id_veterinario
+          FROM VETERINARIO
+          WHERE nome = 'Dr. Ana Souza'
+      )
+  );
+
+/* Atividade 6: Listar Pacientes de Um Tutor Específico */
+SELECT PACIENTE.ID_PACIENTE, PACIENTE.NOME, PACIENTE.RACA 
+FROM PACIENTE
+WHERE ID_TUTOR = (
+    SELECT ID_TUTOR 
+    FROM TUTOR 
+    WHERE NOME = 'Maria Silva'
+);
+
+/* Atividade 7: Buscar Itens de Receita para Medicamento Específico */
+SELECT * FROM ITENSRECEITA
+WHERE ID_MEDICAMENTO = (
+    SELECT ID_MEDICAMENTO 
+    FROM MEDICAMENTOS 
+    WHERE NOME = 'Anti-inflamatório Y'
+);
+
+/* Atividade 8: Contar Pacientes por Tutor */
+SELECT ID_TUTOR, COUNT(*) AS TOTAL_PACIENTES 
+FROM PACIENTE
+GROUP BY ID_TUTOR;
+
+/* Atividade 9: Listar Agendamentos por Veterinário e Motivo */
+SELECT * FROM AGENDAMENTO
+WHERE MOTIVO = 'Exame de sangue' 
+  AND ID_VETERINARIO = (
+      SELECT id_veterinario 
+      FROM VETERINARIO 
+      WHERE nome = 'Dr. Pedro Lima'
+  );
+
+/* Atividade 10: Listar Medicamentos com Descrição Não Nula e Preço Inferior a 50 Reais */
+SELECT * FROM MEDICAMENTOS
+WHERE preco < 50 
+  AND DESCRICAO IS NOT NULL;
+
+/* Atividade 11: Listar Pacientes com Peso Entre Dois Valores */
+SELECT * FROM PACIENTE
+WHERE peso BETWEEN 3 AND 10;
+
+/* Atividade 12: Buscar Pacientes de um Tutor e com Peso Superior a um Valor */
+SELECT * FROM PACIENTE
+WHERE ID_TUTOR = (
+    SELECT ID_TUTOR 
+    FROM TUTOR 
+    WHERE NOME = 'Carlos Lima'
+) 
+AND peso > 5;
+
+/* Atividade 13: Listar Pacientes de Especie 'Cão' com Peso Inferior a 7 kg */
+SELECT * FROM PACIENTE
+WHERE ESPECIE = 'Cão' 
+  AND peso < 7;
+
+/* Atividade 14: Listar Agendamentos de um Período com Peso dos Pacientes */
+SELECT AGENDAMENTO.*, PACIENTE.peso 
+FROM AGENDAMENTO 
+JOIN PACIENTE ON AGENDAMENTO.ID_PACIENTE = PACIENTE.ID_PACIENTE
+WHERE AGENDAMENTO.data_hora BETWEEN '2024-04-01' AND '2024-06-30';
+
+/* Atividade 15: Listar Pacientes que Não Tiveram Consultas */
+SELECT * FROM PACIENTE
+WHERE ID_PACIENTE NOT IN (SELECT ID_PACIENTE FROM AGENDAMENTO);
+
+/* Atividade 16: Listar Pacientes que Não Tiveram Consultas por período */
+SELECT * FROM PACIENTE
+WHERE ID_PACIENTE NOT IN (
+    SELECT ID_PACIENTE 
+    FROM AGENDAMENTO 
+    WHERE data_hora BETWEEN '2024-01-01' AND '2024-01-15'
+);
